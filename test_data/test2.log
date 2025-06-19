@@ -1,0 +1,7 @@
+2023-06-01T10:00:00Z,192.168.1.10,172.217.3.110,https://www.google.com,ALLOW,200,Mozilla/5.0,-
+2023-06-01T10:05:12Z,192.168.1.10,104.244.42.129,https://twitter.com,ALLOW,200,Mozilla/5.0,-
+2023-06-01T10:10:45Z,192.168.1.15,45.227.253.10,https://suspicious-malware.com,BLOCK,403,Mozilla/5.0,malware
+2023-06-01T10:12:33Z,192.168.1.20,89.187.178.133,https://vpn-bypass.io,BLOCK,403,Mozilla/5.0,proxy
+2023-06-01T10:15:00Z,192.168.1.10,172.217.3.110,https://www.google.com,ALLOW,200,Mozilla/5.0,-
+2023-06-01T10:20:18Z,192.168.1.12,139.162.123.42,https://suspicious-login.com,BLOCK,401,Mozilla/5.0,phishing
+2023-06-01T10:22:47Z,192.168.1.15,104.244.42.1,https://twitter.com,ALLOW,200,Mozilla/5.0,-

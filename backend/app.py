@@ -25,6 +25,8 @@ def upload_log():
 
     try:
         parsed = parse_log(filepath)
+        print("✅ Parsed log type:", type(parsed))  # ✅ LOG TYPE DEBUG
+        print("✅ Parsed content:", parsed)          # ✅ LOG DATA DEBUG
     except Exception as e:
         return jsonify({"error": f"Failed to parse log file: {str(e)}"}), 500
 

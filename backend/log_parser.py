@@ -9,18 +9,31 @@ def parse_log(filepath: str) -> list[dict]:
             if not line:
                 continue  # skip empty lines
 
-            # Example format: "2023-01-01T10:00:00 Login from 192.168.1.10"
-            parts = line.split(" ", 1)
-            if len(parts) == 2:
-                timestamp, event = parts
+            parts = line.split(",")
+            if len(parts) < 8:
+                # Malformed entry
                 parsed_entries.append({
-                    "timestamp": timestamp,
-                    "event": event
+                    "timestamp": parts[0] if len(parts) > 0 else "unknown",
+                    "event": line,
+                    "anomaly": True  # malformed lines = suspicious
                 })
-            else:
-                parsed_entries.append({
-                    "timestamp": "unknown",
-                    "event": line
-                })
+                continue
+
+            # Unpack known format
+            timestamp, src_ip, dest_ip, url, action, status, agent, threat_type = parts[:8]
+
+            is_anomaly = (action.upper() == "BLOCK") or (threat_type.strip() != "-")
+
+            parsed_entries.append({
+                "timestamp": timestamp,
+                "source_ip": src_ip,
+                "destination_ip": dest_ip,
+                "url": url,
+                "action": action,
+                "status_code": status,
+                "user_agent": agent,
+                "threat_type": threat_type,
+                "anomaly": is_anomaly
+            })
 
     return parsed_entries
