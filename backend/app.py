@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from log_parser import parse_log
-from db import insert_log_record  # 👈 importing from db.py
+from db import insert_log_record
 from insert_log_entries import insert_individual_logs
 
 app = Flask(__name__)
@@ -26,18 +26,16 @@ def upload_log():
 
     try:
         parsed = parse_log(filepath)
-        insert_log_record(file.filename, parsed)  # 👈 insert to PostgreSQL
-        # Save detailed entries
+        insert_log_record(file.filename, parsed)
         insert_individual_logs(filepath)
-
+        return jsonify({
+            "status": "success",
+            "filename": file.filename,
+            "parsed": parsed
+        })
     except Exception as e:
+        app.logger.error(f"❌ Upload failed: {e}")
         return jsonify({"error": f"Failed to parse or insert log: {str(e)}"}), 500
-
-    return jsonify({
-        "status": "success",
-        "filename": file.filename,
-        "parsed": parsed
-    })
 
 if __name__ == '__main__':
     print("✅ Flask backend running at http://localhost:5000")

@@ -1,0 +1,5 @@
+2023-06-01T11:00:00Z,192.168.2.10,45.227.253.10,https://malicious-updates.net,,403,Mozilla/5.0,
+2023-06-01T11:02:30Z,192.168.2.11,104.244.42.129,https://twitter.com,,200,Mozilla/5.0,
+2023-06-01T11:04:55Z,192.168.2.12,139.162.123.42,https://login-checks.org,,401,Mozilla/5.0,
+2023-06-01T11:06:40Z,192.168.2.13,172.217.3.110,https://www.google.com,,200,Mozilla/5.0,
+2023-06-01T11:08:15Z,192.168.2.14,103.94.211.1,https://freevpnservice.io,,403,Mozilla/5.0,

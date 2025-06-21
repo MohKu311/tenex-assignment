@@ -1,39 +1,38 @@
+# backend/ml/train_model.py
+
 import pandas as pd
+import pickle
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-import joblib
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder
 
 # Load data
-df = pd.read_csv("ml/Synthetic_Log_Dataset.csv")
+df = pd.read_csv("ml/threat_data.csv")
 
-# Drop rows with missing threat_type (can't train on unknown labels)
-df = df[df["threat_type"].notna() & (df["threat_type"] != "-")]
+# Encode target label
+df = df.fillna("-")
+y = df["threat_type"]
+X = df.drop(columns=["threat_type"])
 
-# Extract features and label
-features = df.drop(columns=["threat_type"])
-labels = df["threat_type"]
+# Define preprocessing for categorical columns
+categorical_cols = ["source_ip", "dest_ip", "url", "user_agent", "status_code"]
+preprocessor = ColumnTransformer(
+    transformers=[("cat", OneHotEncoder(handle_unknown="ignore"), categorical_cols)]
+)
 
-# Drop non-predictive columns
-features = features.drop(columns=["timestamp", "action"])  # action is inferred, timestamp is not helpful
+# Create pipeline
+pipeline = Pipeline([
+    ("preprocessor", preprocessor),
+    ("classifier", RandomForestClassifier(random_state=42))
+])
 
-# Encode categorical features
-for col in features.select_dtypes(include="object").columns:
-    features[col] = LabelEncoder().fit_transform(features[col])
+# Fit and save model
+pipeline.fit(X, y)
 
-# Encode the labels
-label_encoder = LabelEncoder()
-labels_encoded = label_encoder.fit_transform(labels)
+with open("ml/threat_model.pkl", "wb") as f:
+    pickle.dump(pipeline, f)
 
-# Train-test split
-X_train, X_test, y_train, y_test = train_test_split(features, labels_encoded, test_size=0.2, random_state=42)
-
-# Train model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
-
-# Save model and label encoder
-joblib.dump(model, "ml/threat_model.pkl")
-joblib.dump(label_encoder, "ml/threat_label_encoder.pkl")
-
-print("✅ Model training complete and saved to disk.")
+print("✅ Model retrained and saved as threat_model.pkl")

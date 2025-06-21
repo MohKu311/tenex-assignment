@@ -1,5 +1,7 @@
 # log_parser.py
 
+from ml.ml_inference import predict_threat_and_action
+
 def parse_log(filepath: str) -> list[dict]:
     parsed_entries = []
 
@@ -21,6 +23,18 @@ def parse_log(filepath: str) -> list[dict]:
 
             # Unpack known format
             timestamp, src_ip, dest_ip, url, action, status, agent, threat_type = parts[:8]
+
+            # If action or threat_type is missing/blank, predict using ML
+            if action.strip() == "" or threat_type.strip() == "":
+                inferred_threat, inferred_action = predict_threat_and_action({
+                    "source_ip": src_ip,
+                    "dest_ip": dest_ip,
+                    "url": url,
+                    "status_code": status,
+                    "user_agent": agent
+                })
+                action = inferred_action
+                threat_type = inferred_threat
 
             is_anomaly = (action.upper() == "BLOCK") or (threat_type.strip() != "-")
 
