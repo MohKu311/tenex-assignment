@@ -123,7 +123,7 @@ The backend expects a running Postgres instance with a database named **`tenex_l
    psql -U postgres
    CREATE DATABASE tenex_logs;```
 
-### 3. Database Schema
+### 2. Database Schema
 
 Once your **tenex_logs** database is running, create two tables:
 
@@ -199,6 +199,7 @@ Logs are marked as anomalies if:
 - Full list of parsed entries
 - Anomaly toggle to filter
 - Pie chart + bar graph breakdowns
+```
 
 ---
 
@@ -229,14 +230,11 @@ Test logs are in `/test_data/`:
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 Mohit Kunder\
 [LinkedIn Profile](https://linkedin.com/in/mohitkunder311)
 
 ---
 
-## 📜 License
-
-MIT
 
