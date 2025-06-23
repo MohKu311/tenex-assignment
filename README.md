@@ -121,7 +121,7 @@ The backend expects a running Postgres instance with a database named **`tenex_l
 
    ```bash
    psql -U postgres
-   CREATE DATABASE tenex_logs;
+   CREATE DATABASE tenex_logs;```
 
 ### 3. Database Schema
 
