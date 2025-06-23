@@ -28,8 +28,9 @@ Built for a cybersecurity take-home interview assessment. This app simulates rea
 
 - **Next.js** (React framework)
 - **TypeScript**
-- **Chart.js** (Data visualization)
 - **Axios** (HTTP requests)
+- **Chart.js + react-chartjs-2** (primary charts)
+- **Recharts** (additional visualisations)
 
 ### Backend
 
@@ -39,6 +40,7 @@ Built for a cybersecurity take-home interview assessment. This app simulates rea
 - **Pickle** (Model serialization)
 
 ---
+
 
 ## Folder Structure
 
@@ -104,6 +106,52 @@ npm run dev                  # Runs frontend on port 3000
 Email: admin@soc.com
 Password: secure123
 ```
+
+---
+
+## Database Setup (PostgreSQL)
+
+The backend expects a running Postgres instance with a database named **`tenex_logs`**.
+
+### 1. Install & create the database
+
+1. **Install PostgreSQL** (e.g., via Homebrew, apt, or the Windows installer).  
+2. Start the server (it usually listens on **localhost:5432**).  
+3. Create the database:
+
+   ```bash
+   psql -U postgres
+   CREATE DATABASE tenex_logs;
+
+### 3. Database Schema
+
+Once your **tenex_logs** database is running, create two tables:
+
+```sql
+-- Table that stores one row per uploaded file
+CREATE TABLE log_files (
+    id            SERIAL PRIMARY KEY,
+    filename      TEXT     NOT NULL,
+    logs          JSONB    NOT NULL,          -- raw log payload (optional; can be NULL if you store entries only)
+    error_count   INTEGER  NOT NULL DEFAULT 0,
+    normal_count  INTEGER  NOT NULL DEFAULT 0,
+    uploaded_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- One row per individual log entry
+CREATE TABLE log_entries (
+    id              SERIAL PRIMARY KEY,
+    timestamp       TIMESTAMPTZ NOT NULL,
+    source_ip       TEXT        NOT NULL,
+    destination_ip  TEXT        NOT NULL,
+    url             TEXT        NOT NULL,
+    action          TEXT        NOT NULL,
+    status_code     INTEGER     NOT NULL,
+    user_agent      TEXT,
+    threat_type     TEXT,
+    anomaly         BOOLEAN     NOT NULL DEFAULT FALSE
+);
+
 
 ---
 
